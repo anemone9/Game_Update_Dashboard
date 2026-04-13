@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { Search } from 'lucide-react'
 import GameCard from './GameCard'
-import { Search, SortAsc } from 'lucide-react'
 
 interface Update {
   version?: string | null
@@ -23,6 +23,18 @@ interface GameGridProps {
   initialGames: Game[]
 }
 
+const filterOptions = [
+  { value: 'all', label: '全部' },
+  { value: 'upcoming', label: '即将更新' },
+  { value: 'favorites', label: '我的收藏' },
+]
+
+const sortOptions = [
+  { value: 'name', label: '按名称' },
+  { value: 'latest', label: '按最新动态' },
+  { value: 'upcoming', label: '按下次更新' },
+]
+
 export default function GameGrid({ initialGames }: GameGridProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterType, setFilterType] = useState('all')
@@ -30,21 +42,28 @@ export default function GameGrid({ initialGames }: GameGridProps) {
   const [favorites, setFavorites] = useState<string[]>([])
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem('favorites') || '[]')
-    setFavorites(saved)
+    const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]')
+    setFavorites(savedFavorites)
   }, [])
 
   const filteredAndSortedGames = useMemo(() => {
-    let filtered = initialGames.filter((game) => {
-      const matchesSearch = 
+    const filtered = initialGames.filter((game) => {
+      const matchesSearch =
         game.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         game.description?.toLowerCase().includes(searchQuery.toLowerCase())
 
       if (filterType === 'upcoming') {
-        return matchesSearch && game.updates.length > 0
-      } else if (filterType === 'favorites') {
+        return (
+          matchesSearch &&
+          game.updates.length > 0 &&
+          new Date(game.updates[0].releaseDate).getTime() > Date.now()
+        )
+      }
+
+      if (filterType === 'favorites') {
         return matchesSearch && favorites.includes(game.id)
       }
+
       return matchesSearch
     })
 
@@ -55,108 +74,81 @@ export default function GameGrid({ initialGames }: GameGridProps) {
         case 'latest':
           if (a.updates.length === 0) return 1
           if (b.updates.length === 0) return -1
-          return (
-            new Date(b.updates[0].releaseDate).getTime() -
-            new Date(a.updates[0].releaseDate).getTime()
-          )
+          return new Date(b.updates[0].releaseDate).getTime() - new Date(a.updates[0].releaseDate).getTime()
         case 'upcoming':
           if (a.updates.length === 0) return 1
           if (b.updates.length === 0) return -1
-          return (
-            new Date(a.updates[0].releaseDate).getTime() -
-            new Date(b.updates[0].releaseDate).getTime()
-          )
+          return new Date(a.updates[0].releaseDate).getTime() - new Date(b.updates[0].releaseDate).getTime()
         default:
           return 0
       }
     })
 
     return filtered
-  }, [initialGames, searchQuery, filterType, sortBy, favorites])
+  }, [favorites, filterType, initialGames, searchQuery, sortBy])
 
   return (
-    <div className="space-y-6">
-      {/* 搜索和过滤栏 */}
-      <div className="space-y-4">
-        {/* 搜索框 */}
-        <div className="relative">
-          <Search className="absolute left-3 top-3 text-gray-500" size={20} />
-          <input
-            type="text"
-            placeholder="搜索游戏名称..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none transition-colors"
-          />
-        </div>
+    <section className="space-y-8">
+      <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/20 backdrop-blur md:p-5">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto_auto] lg:items-center">
+          <label className="relative block">
+            <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
+            <input
+              type="text"
+              placeholder="搜索游戏名或关键词"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              className="w-full rounded-2xl border border-white/10 bg-slate-950/70 py-3 pl-11 pr-4 text-sm text-white outline-none transition focus:border-sky-400/60 focus:bg-slate-950"
+            />
+          </label>
 
-        {/* 过滤和排序按钮 */}
-        <div className="flex flex-wrap gap-2">
-          <div className="flex gap-2">
-            <button
-              onClick={() => setFilterType('all')}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                filterType === 'all'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-              }`}
-            >
-              全部
-            </button>
-            <button
-              onClick={() => setFilterType('upcoming')}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                filterType === 'upcoming'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-              }`}
-            >
-              即将更新
-            </button>
-            <button
-              onClick={() => setFilterType('favorites')}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                filterType === 'favorites'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-              }`}
-            >
-              ♥ 收藏
-            </button>
+          <div className="flex flex-wrap gap-2">
+            {filterOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => setFilterType(option.value)}
+                className={`rounded-full px-4 py-2 text-sm transition ${
+                  filterType === option.value
+                    ? 'bg-sky-400 text-slate-950'
+                    : 'bg-slate-900/70 text-slate-300 hover:bg-slate-800'
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
           </div>
 
-          {/* 排序选择 */}
-          <div className="ml-auto flex gap-2">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none transition-colors"
-            >
-              <option value="name">按名称</option>
-              <option value="latest">按最新更新</option>
-              <option value="upcoming">按下次更新时间</option>
-            </select>
-          </div>
+          <select
+            value={sortBy}
+            onChange={(event) => setSortBy(event.target.value)}
+            className="rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition focus:border-sky-400/60"
+          >
+            {sortOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
-      {/* 游戏网格 */}
       {filteredAndSortedGames.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
           {filteredAndSortedGames.map((game) => (
             <GameCard key={game.id} game={game} />
           ))}
         </div>
       ) : (
-        <div className="text-center py-12">
-          <p className="text-gray-400 text-lg">没有找到匹配的游戏</p>
+        <div className="rounded-3xl border border-dashed border-white/10 bg-white/[0.03] px-6 py-14 text-center">
+          <p className="text-lg text-slate-300">没有找到符合条件的游戏</p>
+          <p className="mt-2 text-sm text-slate-500">试试更换关键词，或者切换筛选方式。</p>
         </div>
       )}
 
-      {/* 统计信息 */}
-      <div className="text-center text-gray-500 text-sm pt-4 border-t border-gray-800">
-        显示 {filteredAndSortedGames.length} / {initialGames.length} 个游戏
+      <div className="flex items-center justify-between border-t border-white/10 pt-4 text-sm text-slate-500">
+        <span>已显示 {filteredAndSortedGames.length} 个游戏</span>
+        <span>总计 {initialGames.length} 个游戏</span>
       </div>
-    </div>
+    </section>
   )
 }
