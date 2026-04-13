@@ -1,0 +1,22 @@
+<svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="delta-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a472a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2d5f3f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0d2818;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="400" fill="url(#delta-grad)"/>
+  
+  <!-- Crosshair -->
+  <line x1="150" y1="80" x2="150" y2="160" stroke="rgba(76,175,80,0.6)" stroke-width="2"/>
+  <line x1="90" y1="120" x2="210" y2="120" stroke="rgba(76,175,80,0.6)" stroke-width="2"/>
+  <circle cx="150" cy="120" r="30" fill="none" stroke="rgba(76,175,80,0.4)" stroke-width="2"/>
+  
+  <!-- Tactical elements -->
+  <rect x="60" y="200" width="180" height="120" fill="none" stroke="rgba(76,175,80,0.3)" stroke-width="2"/>
+  <line x1="60" y1="240" x2="240" y2="240" stroke="rgba(76,175,80,0.2)" stroke-width="1"/>
+  <line x1="150" y1="200" x2="150" y2="320" stroke="rgba(76,175,80,0.2)" stroke-width="1"/>
+  
+  <text x="150" y="350" font-size="24" fill="#4CAF50" text-anchor="middle" font-weight="bold">三角洲行动</text>
+</svg>
