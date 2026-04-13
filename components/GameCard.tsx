@@ -35,6 +35,14 @@ function formatCompactSummary(summary: string) {
   return firstSentence.length > 34 ? `${firstSentence.slice(0, 34).trim()}...` : firstSentence
 }
 
+function readFavorites() {
+  return JSON.parse(localStorage.getItem('favorites') || '[]') as string[]
+}
+
+function broadcastFavorites(favorites: string[]) {
+  window.dispatchEvent(new CustomEvent('favorites-updated', { detail: { favorites } }))
+}
+
 export default function GameCard({ game }: GameCardProps) {
   const [isFavorite, setIsFavorite] = useState(false)
   const [countdown, setCountdown] = useState('')
@@ -48,8 +56,31 @@ export default function GameCard({ game }: GameCardProps) {
   )
 
   useEffect(() => {
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
-    setIsFavorite(favorites.includes(game.id))
+    const syncFavorite = () => {
+      const favorites = readFavorites()
+      setIsFavorite(favorites.includes(game.id))
+    }
+
+    const handleFavoritesUpdated = (event: Event) => {
+      const customEvent = event as CustomEvent<{ favorites?: string[] }>
+      const favorites = customEvent.detail?.favorites ?? readFavorites()
+      setIsFavorite(favorites.includes(game.id))
+    }
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === 'favorites') {
+        syncFavorite()
+      }
+    }
+
+    syncFavorite()
+    window.addEventListener('favorites-updated', handleFavoritesUpdated)
+    window.addEventListener('storage', handleStorage)
+
+    return () => {
+      window.removeEventListener('favorites-updated', handleFavoritesUpdated)
+      window.removeEventListener('storage', handleStorage)
+    }
   }, [game.id])
 
   useEffect(() => {
@@ -80,22 +111,20 @@ export default function GameCard({ game }: GameCardProps) {
   }, [latestUpdate])
 
   const toggleFavorite = () => {
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
+    const favorites = readFavorites()
+    const nextFavorites = isFavorite ? favorites.filter((id) => id !== game.id) : [...favorites, game.id]
 
-    if (isFavorite) {
-      const nextFavorites = favorites.filter((id: string) => id !== game.id)
-      localStorage.setItem('favorites', JSON.stringify(nextFavorites))
-      setShowTooltip(false)
-    } else {
-      favorites.push(game.id)
-      localStorage.setItem('favorites', JSON.stringify(favorites))
-      setShowTooltip(true)
-      window.setTimeout(() => setShowTooltip(false), 1400)
-    }
+    localStorage.setItem('favorites', JSON.stringify(nextFavorites))
+    broadcastFavorites(nextFavorites)
 
     setIsFavorite(!isFavorite)
+    setShowTooltip(!isFavorite)
     setIsPopping(true)
+
     window.setTimeout(() => setIsPopping(false), 260)
+    if (!isFavorite) {
+      window.setTimeout(() => setShowTooltip(false), 1400)
+    }
   }
 
   const hasUpcomingUpdate = latestUpdate ? new Date(latestUpdate.releaseDate).getTime() > Date.now() : false

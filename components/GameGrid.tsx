@@ -35,6 +35,10 @@ const sortOptions = [
   { value: 'upcoming', label: '按下次更新' },
 ]
 
+function readFavorites() {
+  return JSON.parse(localStorage.getItem('favorites') || '[]') as string[]
+}
+
 export default function GameGrid({ initialGames }: GameGridProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterType, setFilterType] = useState('all')
@@ -42,8 +46,27 @@ export default function GameGrid({ initialGames }: GameGridProps) {
   const [favorites, setFavorites] = useState<string[]>([])
 
   useEffect(() => {
-    const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]')
-    setFavorites(savedFavorites)
+    const syncFavorites = () => setFavorites(readFavorites())
+
+    const handleFavoritesUpdated = (event: Event) => {
+      const customEvent = event as CustomEvent<{ favorites?: string[] }>
+      setFavorites(customEvent.detail?.favorites ?? readFavorites())
+    }
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === 'favorites') {
+        syncFavorites()
+      }
+    }
+
+    syncFavorites()
+    window.addEventListener('favorites-updated', handleFavoritesUpdated)
+    window.addEventListener('storage', handleStorage)
+
+    return () => {
+      window.removeEventListener('favorites-updated', handleFavoritesUpdated)
+      window.removeEventListener('storage', handleStorage)
+    }
   }, [])
 
   const filteredAndSortedGames = useMemo(() => {
