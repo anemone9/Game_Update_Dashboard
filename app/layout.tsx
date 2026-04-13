@@ -6,8 +6,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '游戏更新聚合网站',
-  description: '集中查看多个游戏更新时间、倒计时、更新摘要、历史更新记录',
+  title: '游戏更新聚合',
+  description: '集中查看多款游戏的版本更新、倒计时、重点摘要与历史记录。',
 }
 
 export default function RootLayout({

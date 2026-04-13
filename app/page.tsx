@@ -1,33 +1,83 @@
+import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import GameGrid from '@/components/GameGrid'
 
 export const dynamic = 'force-dynamic'
 
+function formatDate(date: Date) {
+  return `${date.getMonth() + 1} 月 ${date.getDate()} 日`
+}
+
 export default async function Home() {
-  const games = await prisma.game.findMany({
-    include: {
-      updates: {
-        orderBy: { releaseDate: 'desc' },
-        take: 2,
+  const [games, upcomingUpdates] = await Promise.all([
+    prisma.game.findMany({
+      include: {
+        updates: {
+          orderBy: { releaseDate: 'desc' },
+          take: 2,
+        },
       },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  })
+      orderBy: {
+        createdAt: 'desc',
+      },
+    }),
+    prisma.update.findMany({
+      where: {
+        releaseDate: {
+          gte: new Date(),
+        },
+        version: {
+          not: {
+            contains: '预测',
+          },
+        },
+      },
+      include: {
+        game: true,
+      },
+      orderBy: {
+        releaseDate: 'asc',
+      },
+      take: 2,
+    }),
+  ])
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.12),transparent_30%),linear-gradient(180deg,#020617_0%,#0f172a_45%,#020617_100%)]">
-      <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
-        <header className="mb-10 overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] px-6 py-8 shadow-2xl shadow-black/20 backdrop-blur md:px-8 md:py-10">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-sky-300/80">Game Update Dashboard</p>
-          <h1 className="max-w-3xl text-4xl font-semibold leading-tight text-white md:text-5xl">
-            一眼看清你关注游戏的最新动态
-          </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300 md:text-base">
-            这里集中展示鸣潮、三角洲行动、无畏契约和 CS2 的版本变化、倒计时与重点摘要。
-            首页只保留最值得看的内容，减少阅读负担。
-          </p>
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.10),transparent_24%),linear-gradient(180deg,#020617_0%,#0f172a_45%,#020617_100%)]">
+      <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-10">
+        <header className="mb-8 border-b border-white/10 pb-6">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.28em] text-sky-300/80">Game Update Dashboard</p>
+              <h1 className="text-3xl font-semibold leading-tight text-white md:text-4xl">游戏更新，一屏看完</h1>
+              <p className="mt-2 text-sm text-slate-400">保留关键版本、倒计时和一句摘要，不在首页堆太多废话。</p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
+              <div className="mb-2 flex items-center justify-between gap-6">
+                <p className="text-sm font-medium text-slate-200">近期时间轴</p>
+                <Link href="/timeline" className="text-sm text-sky-300 transition hover:text-sky-200">
+                  查看全部
+                </Link>
+              </div>
+
+              <div className="space-y-2 text-sm text-slate-300">
+                {upcomingUpdates.length > 0 ? (
+                  upcomingUpdates.map((update) => (
+                    <div key={update.id} className="flex items-center gap-3">
+                      <span className="min-w-[72px] text-sky-300">{formatDate(update.releaseDate)}</span>
+                      <span className="text-slate-500">→</span>
+                      <span className="truncate">
+                        {update.game.name} {update.version ? `更新 · ${update.version}` : '更新'}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-slate-500">暂时没有即将到来的更新。</p>
+                )}
+              </div>
+            </div>
+          </div>
         </header>
 
         <GameGrid initialGames={games} />
