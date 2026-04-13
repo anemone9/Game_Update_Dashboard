@@ -4,8 +4,18 @@ import GameGrid from '@/components/GameGrid'
 
 export const dynamic = 'force-dynamic'
 
-function formatDate(date: Date) {
-  return `${date.getMonth() + 1} 月 ${date.getDate()} 日`
+const timelineDateFormatter = new Intl.DateTimeFormat('zh-CN', {
+  timeZone: 'Asia/Shanghai',
+  month: 'numeric',
+  day: 'numeric',
+})
+
+function formatBeijingDate(date: Date) {
+  const parts = timelineDateFormatter.formatToParts(date)
+  const month = parts.find((part) => part.type === 'month')?.value
+  const day = parts.find((part) => part.type === 'day')?.value
+
+  return `${month} 月 ${day} 日`
 }
 
 export default async function Home() {
@@ -50,7 +60,6 @@ export default async function Home() {
             <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-[0.28em] text-sky-300/80">Game Update Dashboard</p>
               <h1 className="text-3xl font-semibold leading-tight text-white md:text-4xl">游戏更新，一屏看完</h1>
-              <p className="mt-2 text-sm text-slate-400">保留关键版本、倒计时和一句摘要，不在首页堆太多废话。</p>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
@@ -65,10 +74,11 @@ export default async function Home() {
                 {upcomingUpdates.length > 0 ? (
                   upcomingUpdates.map((update) => (
                     <div key={update.id} className="flex items-center gap-3">
-                      <span className="min-w-[72px] text-sky-300">{formatDate(update.releaseDate)}</span>
+                      <span className="min-w-[72px] text-sky-300">{formatBeijingDate(update.releaseDate)}</span>
                       <span className="text-slate-500">→</span>
                       <span className="truncate">
-                        {update.game.name} {update.version ? `更新 · ${update.version}` : '更新'}
+                        {update.game.name}
+                        {update.version ? ` 更新 · ${update.version}` : ' 更新'}
                       </span>
                     </div>
                   ))

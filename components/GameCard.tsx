@@ -32,11 +32,7 @@ function formatCompactSummary(summary: string) {
     .trim()
 
   const firstSentence = simplified.split(/[。；!！?？]/)[0]?.trim() || simplified
-  if (firstSentence.length <= 34) {
-    return firstSentence
-  }
-
-  return `${firstSentence.slice(0, 34).trim()}...`
+  return firstSentence.length > 34 ? `${firstSentence.slice(0, 34).trim()}...` : firstSentence
 }
 
 export default function GameCard({ game }: GameCardProps) {
@@ -80,7 +76,6 @@ export default function GameCard({ game }: GameCardProps) {
 
     updateCountdown()
     const interval = setInterval(updateCountdown, 1000)
-
     return () => clearInterval(interval)
   }, [latestUpdate])
 
@@ -145,7 +140,6 @@ export default function GameCard({ game }: GameCardProps) {
       <div className="space-y-4 p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Game Update</p>
             <h2 className="truncate text-2xl font-semibold text-white">{game.name}</h2>
             <p className="mt-2 text-sm text-slate-400">当前版本：{game.currentVersion || '待补充'}</p>
           </div>
@@ -167,7 +161,6 @@ export default function GameCard({ game }: GameCardProps) {
         </div>
 
         <div className="rounded-2xl border border-white/8 bg-white/[0.04] p-4">
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">更新摘要</p>
           <p className="text-sm leading-6 text-slate-100">{compactSummary}</p>
         </div>
 

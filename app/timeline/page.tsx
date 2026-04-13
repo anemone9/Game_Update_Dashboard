@@ -3,12 +3,29 @@ import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
+const headlineDateFormatter = new Intl.DateTimeFormat('zh-CN', {
+  timeZone: 'Asia/Shanghai',
+  month: 'numeric',
+  day: 'numeric',
+})
+
+const fullDateFormatter = new Intl.DateTimeFormat('zh-CN', {
+  timeZone: 'Asia/Shanghai',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+})
+
 function formatHeadlineDate(date: Date) {
-  return `${date.getMonth() + 1} 月 ${date.getDate()} 日`
+  const parts = headlineDateFormatter.formatToParts(date)
+  const month = parts.find((part) => part.type === 'month')?.value
+  const day = parts.find((part) => part.type === 'day')?.value
+
+  return `${month} 月 ${day} 日`
 }
 
 function formatFullDate(date: Date) {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+  return fullDateFormatter.format(date).replace(/\//g, '-')
 }
 
 function toShortSummary(summary: string) {
@@ -54,7 +71,7 @@ export default async function TimelinePage() {
         <header className="mb-8 border-b border-white/10 pb-6">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.28em] text-sky-300/80">Timeline</p>
           <h1 className="text-3xl font-semibold text-white md:text-4xl">更新时间轴</h1>
-          <p className="mt-2 text-sm text-slate-400">按日期直接看即将更新和最近节点，不用在卡片里翻长段描述。</p>
+          <p className="mt-2 text-sm text-slate-400">按日期直接看即将更新和最近节点。</p>
         </header>
 
         <section className="mb-10">
