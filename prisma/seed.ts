@@ -273,13 +273,13 @@ async function main() {
       '战术射击游戏。站内赛季内容改为结合 TapTap、哔哩哔哩等中文平台整理，展示国服赛季名称、更新时间与重点玩法更新。',
     coverImage: 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2507950/header.jpg',
     officialUrl: 'https://df.qq.com/',
-    currentVersion: 'S8 蝶变时刻',
+    currentVersion: 'S9 回声',
     updates: [
       {
         version: 'S9 回声',
         summary:
-          '将于 2026 年 4 月 16 日开启；官方已确认新赛季“回声”上线，同步带来全新侦察干员“回响”、全面战场新地图“乌姆斯运河”，并预告烽火地带新模式与新玩法内容。三角洲行动通常在北京时间凌晨 4 点更新，此条按北京时间 2026 年 4 月 16 日 04:00 计算。',
-        releaseDate: '2026-04-16T04:00:00+08:00',
+          '2026 年 4 月 16 日上线；新赛季“回声”已开启，新增侦察干员“回响”、全面战场新地图“乌姆斯运河”、M82 狙击步枪与 AR57 突击步枪，并加入烽火地带新模式、新玩法、特勤处新系统、赛季通行证与大量平衡优化。官方后续确认了近战武器“坠星者”、脑机扫描任务结算、移动端跟随开火等异常问题的修复进度。',
+        releaseDate: '2026-04-16T03:00:00+08:00',
       },
       {
         version: 'S8 蝶变时刻',
