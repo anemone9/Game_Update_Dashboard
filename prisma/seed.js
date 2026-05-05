@@ -411,6 +411,41 @@ async function main() {
   })
 
   await upsertGameWithUpdates({
+    name: '异环',
+    description:
+      '超自然都市开放世界 RPG。站内信息以《异环》官方预约页与官方论坛公告为主，优先展示国服测试、公测节点与核心玩法变化。',
+    coverImage: 'https://img-tc.tapimg.com/market/images/2ad073f1cc0654de3235e73af446f7bf.jpg/_tap_screenshot.jpg',
+    officialUrl: 'https://www.taptap.cn/app/714119',
+    currentVersion: '1.0｜全平台公测',
+    updates: [
+      {
+        version: '1.0｜全平台公测',
+        summary:
+          '2026 年 4 月 23 日 10:00 开启；《异环》国服全平台公测正式上线。首发覆盖 PC、安卓与 iOS，官方同步强调海特洛都市探索、异象委托、角色养成、车辆与都市生活玩法，并开放跨端进度互通。TapTap 预约页同时标注公测已正式开启。',
+        releaseDate: '2026-04-23T10:00:00+08:00',
+      },
+      {
+        version: '共存测试',
+        summary:
+          '2026 年 2 月 4 日 10:00 开启；本次为限量计费删档测试，覆盖 PC、安卓与 iOS，并明确于 2026 年 2 月 18 日 23:59 结束。官方借这轮测试集中验证跨端体验、都市探索与商业化返还规则。',
+        releaseDate: '2026-02-04T10:00:00+08:00',
+      },
+      {
+        version: '收容测试',
+        summary:
+          '2025 年 6 月 26 日开启；《异环》首次大规模测试节点落地，围绕海特洛市探索、异能战斗、载具驾驶与都市沉浸感收集首轮系统反馈，也为后续优化清单与测试扩容打下基础。',
+        releaseDate: '2025-06-26',
+      },
+      {
+        version: '首曝 PV｜预约开启',
+        summary:
+          '2024 年 7 月 16 日公开；Hotta Studio 首次放出《异环》PV 与长段实机演示，并同步开启预约。官方首次完整展示“超自然都市开放世界”定位、海特洛市舞台、异象猎人设定，以及无缝城市穿梭与室内外切换等核心卖点。',
+        releaseDate: '2024-07-16',
+      },
+    ],
+  })
+
+  await upsertGameWithUpdates({
     name: 'CS2',
     description:
       '《反恐精英 2》中文区信息聚合，优先展示 Valve 官方公告、Steam 社区更新与中文社区整理过的重点内容，不加入预测倒计时。',
