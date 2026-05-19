@@ -425,7 +425,7 @@ async function main() {
     name: '异环',
     description:
       '超自然都市开放世界 RPG。站内信息以《异环》官方预约页与官方论坛公告为主，优先展示国服测试、公测节点与核心玩法变化。',
-    coverImage: 'https://img-tc.tapimg.com/market/images/2ad073f1cc0654de3235e73af446f7bf.jpg/_tap_screenshot.jpg',
+    coverImage: '/yihuan.jpg',
     officialUrl: 'https://www.taptap.cn/app/714119',
     currentVersion: '1.0 上半｜全平台公测',
     updates: [

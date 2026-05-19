@@ -21,18 +21,33 @@ interface GameCardProps {
   game: Game
 }
 
-function formatCompactSummary(summary: string) {
-  const simplified = summary
-    .replace(/\d{4}\s*年\s*\d{1,2}\s*月\s*\d{1,2}\s*日/g, '')
-    .replace(/\d{1,2}\s*月\s*\d{1,2}\s*日/g, '')
-    .replace(/北京时间(?:凌晨|早上|上午|下午)?\s*\d+\s*点/g, '')
-    .replace(/将于|预计|开启|上线|更新/g, '')
-    .replace(/\s+/g, ' ')
-    .replace(/[；，、]\s*$/, '')
-    .trim()
+const fallbackCoverImages: Record<string, string> = {
+  '鸣潮': '/wuthering-waves.jpg',
+  '异环': '/yihuan.jpg',
+  '无畏契约': '/valorant.jpg',
+  'CS2': '/cs2.jpg',
+}
 
-  const firstSentence = simplified.split(/[。；!！?？]/)[0]?.trim() || simplified
-  return firstSentence.length > 34 ? `${firstSentence.slice(0, 34).trim()}...` : firstSentence
+function getFallbackCoverImage(gameName: string) {
+  return fallbackCoverImages[gameName] ?? '/delta-force.svg'
+}
+
+function formatCompactSummary(summary: string) {
+  const normalized = summary
+    .replace(
+      /\d{4}\s*年\s*\d{1,2}\s*月\s*\d{1,2}\s*日(?:\s*(?:上午|下午|凌晨|中午|晚间|晚上|早上)?\s*\d{1,2}(?::\d{2})?)?(?:（[^）]*）)?/g,
+      ''
+    )
+    .replace(/\d{1,2}\s*月\s*\d{1,2}\s*日(?:\s*\d{1,2}:\d{2})?/g, '')
+    .replace(/北京时间|服务器时间|更新后|上线后/g, '')
+    .replace(/将于|预计|现已|正式|开启|上线|更新/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/^[；;，,、。：:·\-\s]+/, '')
+    .replace(/[；;，,、。：:·\-\s]+$/, '')
+
+  const firstSentence = normalized.split(/[。！？!?]/)[0]?.trim() || normalized
+  return firstSentence.length > 46 ? `${firstSentence.slice(0, 46).trim()}...` : firstSentence
 }
 
 function readFavorites() {
@@ -48,12 +63,17 @@ export default function GameCard({ game }: GameCardProps) {
   const [countdown, setCountdown] = useState('')
   const [showTooltip, setShowTooltip] = useState(false)
   const [isPopping, setIsPopping] = useState(false)
+  const [imageSrc, setImageSrc] = useState(game.coverImage || getFallbackCoverImage(game.name))
 
   const latestUpdate = game.updates[0]
   const compactSummary = useMemo(
     () => (latestUpdate ? formatCompactSummary(latestUpdate.summary) : '暂无更新摘要'),
     [latestUpdate]
   )
+
+  useEffect(() => {
+    setImageSrc(game.coverImage || getFallbackCoverImage(game.name))
+  }, [game.coverImage, game.name])
 
   useEffect(() => {
     const syncFavorite = () => {
@@ -106,8 +126,8 @@ export default function GameCard({ game }: GameCardProps) {
     }
 
     updateCountdown()
-    const interval = setInterval(updateCountdown, 1000)
-    return () => clearInterval(interval)
+    const interval = window.setInterval(updateCountdown, 1000)
+    return () => window.clearInterval(interval)
   }, [latestUpdate])
 
   const toggleFavorite = () => {
@@ -124,6 +144,13 @@ export default function GameCard({ game }: GameCardProps) {
     window.setTimeout(() => setIsPopping(false), 260)
     if (!isFavorite) {
       window.setTimeout(() => setShowTooltip(false), 1400)
+    }
+  }
+
+  const handleImageError = () => {
+    const fallback = getFallbackCoverImage(game.name)
+    if (imageSrc !== fallback) {
+      setImageSrc(fallback)
     }
   }
 
@@ -154,17 +181,16 @@ export default function GameCard({ game }: GameCardProps) {
 
   return (
     <article className="group overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.96),rgba(8,15,30,0.98))] shadow-[0_20px_60px_rgba(0,0,0,0.32)] transition duration-300 hover:-translate-y-1 hover:border-sky-400/35">
-      {game.coverImage && (
-        <div className="relative h-52 overflow-hidden bg-slate-800">
-          <img
-            src={game.coverImage}
-            alt={game.name}
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/35 to-transparent" />
-          <div className="absolute right-4 top-4">{favoriteButton}</div>
-        </div>
-      )}
+      <div className="relative h-52 overflow-hidden bg-slate-800">
+        <img
+          src={imageSrc}
+          alt={game.name}
+          className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+          onError={handleImageError}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/35 to-transparent" />
+        <div className="absolute right-4 top-4">{favoriteButton}</div>
+      </div>
 
       <div className="space-y-4 p-5">
         <div className="flex items-start justify-between gap-3">
@@ -172,8 +198,6 @@ export default function GameCard({ game }: GameCardProps) {
             <h2 className="truncate text-2xl font-semibold text-white">{game.name}</h2>
             <p className="mt-2 text-sm text-slate-400">当前版本：{game.currentVersion || '待补充'}</p>
           </div>
-
-          {!game.coverImage && favoriteButton}
         </div>
 
         <div className="flex flex-wrap gap-2 text-xs font-medium">
