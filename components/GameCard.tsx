@@ -22,10 +22,10 @@ interface GameCardProps {
 }
 
 const fallbackCoverImages: Record<string, string> = {
-  '鸣潮': '/wuthering-waves.jpg',
-  '异环': '/yihuan.jpg',
-  '无畏契约': '/valorant.jpg',
-  'CS2': '/cs2.jpg',
+  鸣潮: '/wuthering-waves.jpg',
+  异环: '/yihuan.jpg',
+  无畏契约: '/valorant.jpg',
+  CS2: '/cs2.jpg',
 }
 
 function getFallbackCoverImage(gameName: string) {
@@ -41,6 +41,7 @@ function formatCompactSummary(summary: string) {
     .replace(/\d{1,2}\s*月\s*\d{1,2}\s*日(?:\s*\d{1,2}:\d{2})?/g, '')
     .replace(/北京时间|服务器时间|更新后|上线后/g, '')
     .replace(/将于|预计|现已|正式|开启|上线|更新/g, '')
+    .replace(/[（(]\s*[）)]/g, '')
     .replace(/\s+/g, ' ')
     .trim()
     .replace(/^[；;，,、。：:·\-\s]+/, '')
