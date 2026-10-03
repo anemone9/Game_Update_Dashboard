@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { Heart } from 'lucide-react'
+import { ArrowUpRight, Heart } from 'lucide-react'
 
 interface Game {
   id: string
@@ -19,6 +19,7 @@ interface Game {
 
 interface GameCardProps {
   game: Game
+  index?: number
 }
 
 const fallbackCoverImages: Record<string, string> = {
@@ -39,6 +40,7 @@ function formatCompactSummary(summary: string) {
       ''
     )
     .replace(/\d{1,2}\s*月\s*\d{1,2}\s*日(?:\s*\d{1,2}:\d{2})?/g, '')
+    .replace(/截至\s*[，,。；;]?/g, '')
     .replace(/北京时间|服务器时间|更新后|上线后/g, '')
     .replace(/将于|预计|现已|正式|开启|上线|更新/g, '')
     .replace(/[（(]\s*[）)]/g, '')
@@ -48,7 +50,7 @@ function formatCompactSummary(summary: string) {
     .replace(/[；;，,、。：:·\-\s]+$/, '')
 
   const firstSentence = normalized.split(/[。！？!?]/)[0]?.trim() || normalized
-  return firstSentence.length > 46 ? `${firstSentence.slice(0, 46).trim()}...` : firstSentence
+  return firstSentence.length > 52 ? `${firstSentence.slice(0, 52).trim()}...` : firstSentence
 }
 
 function readFavorites() {
@@ -59,7 +61,7 @@ function broadcastFavorites(favorites: string[]) {
   window.dispatchEvent(new CustomEvent('favorites-updated', { detail: { favorites } }))
 }
 
-export default function GameCard({ game }: GameCardProps) {
+export default function GameCard({ game, index = 0 }: GameCardProps) {
   const [isFavorite, setIsFavorite] = useState(false)
   const [countdown, setCountdown] = useState('')
   const [showTooltip, setShowTooltip] = useState(false)
@@ -77,21 +79,15 @@ export default function GameCard({ game }: GameCardProps) {
   }, [game.coverImage, game.name])
 
   useEffect(() => {
-    const syncFavorite = () => {
-      const favorites = readFavorites()
-      setIsFavorite(favorites.includes(game.id))
-    }
+    const syncFavorite = () => setIsFavorite(readFavorites().includes(game.id))
 
     const handleFavoritesUpdated = (event: Event) => {
       const customEvent = event as CustomEvent<{ favorites?: string[] }>
-      const favorites = customEvent.detail?.favorites ?? readFavorites()
-      setIsFavorite(favorites.includes(game.id))
+      setIsFavorite((customEvent.detail?.favorites ?? readFavorites()).includes(game.id))
     }
 
     const handleStorage = (event: StorageEvent) => {
-      if (event.key === 'favorites') {
-        syncFavorite()
-      }
+      if (event.key === 'favorites') syncFavorite()
     }
 
     syncFavorite()
@@ -111,23 +107,22 @@ export default function GameCard({ game }: GameCardProps) {
     }
 
     const nextUpdate = new Date(latestUpdate.releaseDate)
-
     const updateCountdown = () => {
-      const now = new Date()
-      const diff = nextUpdate.getTime() - now.getTime()
+      const diff = nextUpdate.getTime() - Date.now()
 
-      if (diff > 0) {
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-        setCountdown(`${days}天 ${hours}小时 ${minutes}分钟`)
-      } else {
+      if (diff <= 0) {
         setCountdown('已更新')
+        return
       }
+
+      const days = Math.floor(diff / 86400000)
+      const hours = Math.floor((diff % 86400000) / 3600000)
+      const minutes = Math.floor((diff % 3600000) / 60000)
+      setCountdown(`${days}天 ${hours}小时 ${minutes}分钟`)
     }
 
     updateCountdown()
-    const interval = window.setInterval(updateCountdown, 1000)
+    const interval = window.setInterval(updateCountdown, 60000)
     return () => window.clearInterval(interval)
   }, [latestUpdate])
 
@@ -137,93 +132,86 @@ export default function GameCard({ game }: GameCardProps) {
 
     localStorage.setItem('favorites', JSON.stringify(nextFavorites))
     broadcastFavorites(nextFavorites)
-
     setIsFavorite(!isFavorite)
     setShowTooltip(!isFavorite)
     setIsPopping(true)
 
     window.setTimeout(() => setIsPopping(false), 260)
-    if (!isFavorite) {
-      window.setTimeout(() => setShowTooltip(false), 1400)
-    }
+    if (!isFavorite) window.setTimeout(() => setShowTooltip(false), 1400)
   }
 
   const handleImageError = () => {
     const fallback = getFallbackCoverImage(game.name)
-    if (imageSrc !== fallback) {
-      setImageSrc(fallback)
-    }
+    if (imageSrc !== fallback) setImageSrc(fallback)
   }
 
   const hasUpcomingUpdate = latestUpdate ? new Date(latestUpdate.releaseDate).getTime() > Date.now() : false
 
-  const favoriteButton = (
-    <div className="relative">
-      <button
-        onClick={toggleFavorite}
-        onMouseEnter={() => isFavorite && setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-        className={`rounded-full border border-white/10 bg-slate-950/75 p-2.5 transition duration-200 ${
-          isFavorite ? 'text-rose-400' : 'text-slate-300 hover:text-rose-400'
-        } ${isPopping ? 'scale-125' : 'scale-100'}`}
-        aria-label={isFavorite ? '已收藏该游戏' : '收藏游戏'}
-        title={isFavorite ? '已收藏该游戏' : '收藏游戏'}
-      >
-        <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
-      </button>
-
-      {showTooltip && isFavorite && (
-        <span className="absolute right-0 top-full z-10 mt-2 whitespace-nowrap rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-900 shadow-lg">
-          已收藏该游戏
-        </span>
-      )}
-    </div>
-  )
-
   return (
-    <article className="group overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,42,0.96),rgba(8,15,30,0.98))] shadow-[0_20px_60px_rgba(0,0,0,0.32)] transition duration-300 hover:-translate-y-1 hover:border-sky-400/35">
-      <div className="relative h-52 overflow-hidden bg-slate-800">
+    <article
+      className="portal-reveal group overflow-hidden rounded-md border border-white/10 bg-[#0d0d0d] transition duration-300 hover:-translate-y-1 hover:border-white/30"
+      style={{ animationDelay: `${Math.min(index, 5) * 70}ms` }}
+    >
+      <div className="relative aspect-[16/9] overflow-hidden bg-zinc-900">
         <img
           src={imageSrc}
           alt={game.name}
-          className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+          className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.035]"
           onError={handleImageError}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/35 to-transparent" />
-        <div className="absolute right-4 top-4">{favoriteButton}</div>
+        <div className="absolute inset-0 bg-black/15" />
+
+        <div className="absolute left-3 top-3 rounded-full bg-black/70 px-3 py-1.5 text-xs font-medium text-white backdrop-blur">
+          {hasUpcomingUpdate ? `倒计时 ${countdown}` : countdown}
+        </div>
+
+        <div className="absolute right-3 top-3">
+          <button
+            onClick={toggleFavorite}
+            onMouseEnter={() => isFavorite && setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+            className={`grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-black/70 backdrop-blur transition ${
+              isFavorite ? 'text-[#ff6b5b]' : 'text-white hover:text-[#ff6b5b]'
+            } ${isPopping ? 'scale-125' : 'scale-100'}`}
+            aria-label={isFavorite ? '取消收藏该游戏' : '收藏游戏'}
+            title={isFavorite ? '取消收藏' : '收藏游戏'}
+          >
+            <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
+          </button>
+
+          {showTooltip && isFavorite ? (
+            <span className="absolute right-0 top-full z-10 mt-2 whitespace-nowrap rounded bg-white px-2.5 py-1 text-xs font-medium text-black">
+              已收藏
+            </span>
+          ) : null}
+        </div>
       </div>
 
-      <div className="space-y-4 p-5">
-        <div className="flex items-start justify-between gap-3">
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h2 className="truncate text-2xl font-semibold text-white">{game.name}</h2>
-            <p className="mt-2 text-sm text-slate-400">当前版本：{game.currentVersion || '待补充'}</p>
+            <h3 className="truncate text-2xl font-semibold text-white">{game.name}</h3>
+            <p className="mt-2 truncate text-sm text-zinc-500">当前版本 · {game.currentVersion || '待补充'}</p>
           </div>
+          <span className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-zinc-400">#{String(index + 1).padStart(2, '0')}</span>
         </div>
 
-        <div className="flex flex-wrap gap-2 text-xs font-medium">
-          <span
-            className={`rounded-full px-3 py-1.5 ${
-              hasUpcomingUpdate ? 'bg-sky-500/15 text-sky-300' : 'bg-emerald-500/15 text-emerald-300'
-            }`}
+        {latestUpdate?.version ? (
+          <p className="mt-4 text-xs font-medium text-[#d7ff3f]">{latestUpdate.version}</p>
+        ) : null}
+
+        <p className="mt-3 min-h-[48px] border-l-2 border-[#d7ff3f] pl-3 text-sm leading-6 text-zinc-300">{compactSummary}</p>
+
+        <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
+          <span className="text-xs text-zinc-600">UPDATE INTEL</span>
+          <Link
+            href={`/games/${game.id}`}
+            className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-[#d7ff3f]"
           >
-            {hasUpcomingUpdate ? `倒计时 ${countdown}` : countdown}
-          </span>
-          {latestUpdate?.version && (
-            <span className="rounded-full bg-white/7 px-3 py-1.5 text-slate-300">{latestUpdate.version}</span>
-          )}
+            查看详情
+            <ArrowUpRight size={16} />
+          </Link>
         </div>
-
-        <div className="rounded-2xl border border-white/8 bg-white/[0.04] p-4">
-          <p className="text-sm leading-6 text-slate-100">{compactSummary}</p>
-        </div>
-
-        <Link
-          href={`/games/${game.id}`}
-          className="inline-flex items-center rounded-full bg-sky-400 px-4 py-2.5 text-sm font-medium text-slate-950 transition hover:bg-sky-300"
-        >
-          查看详情
-        </Link>
       </div>
     </article>
   )
