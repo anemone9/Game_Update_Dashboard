@@ -606,7 +606,7 @@ async function main() {
     description:
       '超自然都市开放世界 RPG。站内信息以《异环》官方预约页与官方论坛公告为主，优先展示国服测试、公测节点与核心玩法变化。',
     coverImage: '/yihuan.jpg',
-    officialUrl: 'https://www.taptap.cn/app/714119',
+    officialUrl: 'https://nte.perfectworld.com/cn/',
     currentVersion: '1.4 上半｜祷歌为谁而诵',
     updates: [
       {
@@ -695,7 +695,7 @@ async function main() {
     description:
       '《反恐精英 2》中文区信息聚合，优先展示 Valve 官方公告、Steam 社区更新与中文社区整理过的重点内容，不加入预测倒计时。',
     coverImage: '/cs2.jpg',
-    officialUrl: 'https://www.csgo.com.cn/',
+    officialUrl: 'https://www.counter-strike.net/home?l=schinese',
     currentVersion: '第五赛季｜10 月 8 日更新',
     updates: [
       {
