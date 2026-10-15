@@ -31,7 +31,7 @@ function getLocalCover(gameName?: string | null) {
 }
 
 export default async function Home() {
-  const [games, upcomingUpdates, updateCount] = await Promise.all([
+  const [games, upcomingUpdates] = await Promise.all([
     prisma.game.findMany({
       include: {
         updates: {
@@ -62,7 +62,6 @@ export default async function Home() {
       },
       take: 3,
     }),
-    prisma.update.count(),
   ])
 
   const featuredUpdate = upcomingUpdates[0]
@@ -145,14 +144,10 @@ export default async function Home() {
             </aside>
           </div>
 
-          <div className="portal-reveal mt-10 grid max-w-2xl grid-cols-3 border-t border-white/15 pt-5" style={{ animationDelay: '320ms' }}>
+          <div className="portal-reveal mt-10 grid max-w-2xl grid-cols-2 border-t border-white/15 pt-5" style={{ animationDelay: '320ms' }}>
             <div>
               <p className="text-2xl font-semibold text-white">{games.length}</p>
               <p className="mt-1 text-xs text-zinc-500">收录游戏</p>
-            </div>
-            <div>
-              <p className="text-2xl font-semibold text-white">{updateCount}</p>
-              <p className="mt-1 text-xs text-zinc-500">更新记录</p>
             </div>
             <div>
               <p className="text-2xl font-semibold text-white">{upcomingUpdates.length}</p>
