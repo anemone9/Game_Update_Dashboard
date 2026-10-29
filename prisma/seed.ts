@@ -57,8 +57,14 @@ async function main() {
       {
         version: '3.8 情报观察｜未官宣',
         summary:
-          '截至 2026 年 10 月 15 日，库洛尚未发布 3.8 版本前瞻或正式卡池公告。社区数据挖掘与爆料较集中指向新角色候选「莉莉」，但角色名称、上下半顺序、复刻位与版本日期均未获官方确认；站内按 3.7 六周周期暂估 11 月 12 日更新，仅供资源规划参考。',
+          '截至 2026 年 10 月 29 日，官方尚未发布 3.8 版本前瞻或正式卡池公告，现阶段流传的角色与卡池名单均未获官方确认。站内仅按 3.7 六周版本周期暂估 11 月 12 日前后更新，此日期为节奏推算而非官方定档；卡池内容待官方公布。来源：https://mc.kurogames.com/main/',
         releaseDate: '2026-11-12T11:00:00+08:00',
+      },
+      {
+        version: '3.7 下半｜10 月 29 日活动',
+        summary:
+          '3.7 限时探索委托「踏潮探历·玄方地界」于 2026 年 10 月 29 日 04:00 开启，持续至 11 月 11 日 03:59。每日完成活动目标可获得探历札记，用于抽取随机补给奖励。来源：https://mc.kurogames.com/main/news/detail/5569',
+        releaseDate: '2026-10-29T04:00:00+08:00',
       },
       {
         version: '3.7 上半｜10 月 15 日活动',
@@ -333,13 +339,19 @@ async function main() {
       '战术射击游戏。站内赛季内容改为结合 TapTap、哔哩哔哩等中文平台整理，展示国服赛季名称、更新时间与重点玩法更新。',
     coverImage: 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2507950/header.jpg',
     officialUrl: 'https://df.qq.com/',
-    currentVersion: 'S11 群星｜10 月 15 日更新',
+    currentVersion: 'S11 群星｜10 月 29 日万圣更新',
     updates: [
       {
         version: 'S12 时间预测｜未官宣',
         summary:
-          '截至 2026 年 10 月 22 日，官方尚未公布 S12 名称与开服日期。现有 S11 赛季活动排期显示部分活动至 11 月 4 日结束；若按赛季节点衔接推算，下一大版本可能在 11 月上旬开启，但官方尚未确认具体日期，不能视作定档。来源：https://steamcommunity.com/app/2507950/announcements/',
+          '截至 2026 年 10 月 29 日，官方尚未公布 S12 名称与开服日期。站内仅按过往赛季周期推测下一大版本可能在 11 月上旬开启，11 月 5 日是估算参考，不是官方定档；本次万圣活动已公布至 11 月 9 日，赛季衔接时间仍有不确定性。来源：https://steamcommunity.com/app/2507950/announcements/',
         releaseDate: '2026-11-05T03:00:00+08:00',
+      },
+      {
+        version: 'S11 群星｜10 月 29 日万圣更新',
+        summary:
+          '2026 年 10 月 29 日不停机更新开启万圣活动。「战术军备赠礼」于 10 月 29 日至 11 月 9 日开放，完成登录、生存时长或对局任务可领取最多 20 张战术军备券；10 月 30 日起还有限时寻找「薇林花」活动及爆破模式万圣补给。官方同时提醒周年限时三角券将于 11 月 4 日 23:59（UTC）过期。来源：https://steamcommunity.com/app/2507950/announcements/',
+        releaseDate: '2026-10-29T03:00:00+08:00',
       },
       {
         version: 'S11 群星｜10 月 15 日更新',
@@ -464,8 +476,14 @@ async function main() {
       '5v5 战术射击游戏版本信息，站内以 Riot 官方主线补丁说明为主，兼顾中文玩家常关注的地图轮换、Premier 赛段与系统改动。',
     coverImage: '/valorant.jpg',
     officialUrl: 'https://val.qq.com/',
-    currentVersion: '13.08｜V26 第六章',
+    currentVersion: '13.09｜V26 第六章',
     updates: [
+      {
+        version: '13.09｜Hush 登场',
+        summary:
+          '2026 年 10 月 27 日上线。新特务 Hush 登场，更新技能说明与增益术语；Clove 移速增益由 15% 下调至 10%，Warden 后续弹散布优化。表现评分、地图评分和首杀荣誉也有调整，并修复多名特务技能、观战及界面问题。来源：https://playvalorant.com/en-us/news/game-updates/valorant-patch-notes-1309/',
+        releaseDate: '2026-10-27T13:00:00Z',
+      },
       {
         version: '13.08｜V26 第六章',
         summary:
@@ -613,13 +631,19 @@ async function main() {
       '超自然都市开放世界 RPG。站内信息以《异环》官方预约页与官方论坛公告为主，优先展示国服测试、公测节点与核心玩法变化。',
     coverImage: '/yihuan.jpg',
     officialUrl: 'https://nte.perfectworld.com/cn/',
-    currentVersion: '1.4 下半｜明音凛 10 月 21 日开启',
+    currentVersion: '1.4 下半｜明音凛及 10 月 29 日活动',
     updates: [
       {
         version: '1.5 情报观察｜未官宣',
         summary:
-          '截至 2026 年 10 月 22 日，官方尚未公布 1.5 版本安排。角色介绍或社区推测均不足以确认新版本归属、卡池顺序、复刻角色、地图内容或开服日期，因此暂不将未经确认的 1.5 情报写成版本内容。',
+          '截至 2026 年 10 月 29 日，官网尚未公布 1.5 版本更新公告、卡池顺序、复刻角色或开服日期。网络流传的角色安排与日期没有官方公告佐证，暂不作为确定情报展示。来源：https://nte.perfectworld.com/cn/article/news/gamenews/index.html',
         releaseDate: '2026-11-11T11:00:00+08:00',
+      },
+      {
+        version: '1.4 下半｜10 月 29 日活动',
+        summary:
+          '限时活动「噗卡翻翻乐」于 2026 年 10 月 29 日 05:00（服务器时间）开启，持续至 11 月 11 日 05:59。完成每日任务获取翻牌次数，可参与翻牌领取环石、捏造骰子、特级猎人攻略及混沌染剂等奖励。来源：https://nte.perfectworld.com/cn/article/news/gamenews/20261019/264673.html',
+        releaseDate: '2026-10-29T05:00:00+08:00',
       },
       {
         version: '1.4 下半｜祷歌为谁而诵',
@@ -702,8 +726,14 @@ async function main() {
       '《反恐精英 2》中文区信息聚合，优先展示 Valve 官方公告、Steam 社区更新与中文社区整理过的重点内容，不加入预测倒计时。',
     coverImage: '/cs2.jpg',
     officialUrl: 'https://www.counter-strike.net/home?l=schinese',
-    currentVersion: '第五赛季｜10 月 14 日更新',
+    currentVersion: '第五赛季｜10 月 29 日更新',
     updates: [
+      {
+        version: '2026-10-29 更新',
+        summary:
+          '2026 年 10 月 29 日更新；静音换弹新增按住或切换两种操作方式，并修复换弹音效误响、AMD 显卡液体渲染异常及 Demo 回放倒带时的音效和界面问题。来源：https://steamcommunity.com/app/730/announcements/',
+        releaseDate: '2026-10-29',
+      },
       {
         version: '2026-10-14 更新',
         summary:
