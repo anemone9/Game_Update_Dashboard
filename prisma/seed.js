@@ -41,13 +41,13 @@ async function main() {
       '开放世界动作 ARPG。站内版本信息改为基于中文社区与平台公告整理，优先展示国服版本节点与核心更新内容。',
     coverImage: '/wuthering-waves.jpg',
     officialUrl: 'https://mc.kurogames.com/',
-    currentVersion: '3.7 下半｜锁暝卡池 10 月 22 日开启',
+    currentVersion: '3.7 下半｜锁暝卡池至 11 月 12 日维护前',
     updates: [
       {
-        version: '3.8 情报观察｜未官宣',
+        version: '3.8 即将更新｜旧梦凋零的百合',
         summary:
-          '截至 2026 年 10 月 29 日，官方尚未发布 3.8 版本前瞻或正式卡池公告，现阶段流传的角色与卡池名单均未获官方确认。站内仅按 3.7 六周版本周期暂估 11 月 12 日前后更新，此日期为节奏推算而非官方定档；卡池内容待官方公布。来源：https://mc.kurogames.com/main/',
-        releaseDate: '2026-11-12T11:00:00+08:00',
+          '官方公告确认 3.8「旧梦凋零的百合」将于 2026 年 11 月 12 日 04:00 至 11:00（UTC+8）维护更新。已确认上半新 5 星共鸣者「莉莉」及其角色活动唤取「盛放于昨日梦土的花朵」、5 星佩枪「安魂」武器活动；预告未公布复刻名单、下半卡池角色及各期结束时间，因此不补写未经确认的名单。版本新增潮汐任务第四章第五幕「予以明日的花束」和场景「灵魂列车」，并列出第二索拉：未名之梦、梦野寻奇等活动。来源：https://mc.kurogames.com/main；鸣潮官方公告：https://www.taptap.cn/moment/867871551700077817',
+        releaseDate: '2026-11-12T04:00:00+08:00',
       },
       {
         version: '3.7 下半｜10 月 29 日活动',
@@ -328,13 +328,19 @@ async function main() {
       '战术射击游戏。站内赛季内容改为结合 TapTap、哔哩哔哩等中文平台整理，展示国服赛季名称、更新时间与重点玩法更新。',
     coverImage: 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2507950/header.jpg',
     officialUrl: 'https://df.qq.com/',
-    currentVersion: 'S11 群星｜10 月 29 日万圣更新',
+    currentVersion: 'S12 极光｜11 月 10 日开启',
     updates: [
       {
-        version: 'S12 时间预测｜未官宣',
+        version: 'S13 开季时间估算｜非官方',
         summary:
-          '截至 2026 年 10 月 29 日，官方尚未公布 S12 名称与开服日期。站内仅按过往赛季周期推测下一大版本可能在 11 月上旬开启，11 月 5 日是估算参考，不是官方定档；本次万圣活动已公布至 11 月 9 日，赛季衔接时间仍有不确定性。来源：https://steamcommunity.com/app/2507950/announcements/',
-        releaseDate: '2026-11-05T03:00:00+08:00',
+          '官方尚未公布 S13 日期。按 S12 官方赛季任务排期至 2027 年 1 月 25 日，暂以次日 1 月 26 日作为下一大版本的粗略观察点；赛季任务结束不等于新赛季必定当日开启，实际时间、名称与内容均待官方公告。来源：https://deltaforce.garena.com/en/news/announcement/GWPGVY',
+        releaseDate: '2027-01-26',
+      },
+      {
+        version: 'S12 极光｜11 月 10 日上线',
+        summary:
+          'S12「极光」（Aurora）已于 2026 年 11 月 10 日开启。新增突击干员 Martelo、烽火地带布拉克什 2.0 与新玩法、全面战场地图「天顶港」、AN-94 突击步枪及新弹药和配件；同步开启《影之刃零》联动活动，S12 赛季任务排期至 2027 年 1 月 25 日。来源：https://deltaforce.garena.com/en/news/announcement/GWPGVY；https://deltaforce.garena.com/en/news/announcement/STZAUY',
+        releaseDate: '2026-11-10T10:00:00+08:00',
       },
       {
         version: 'S11 群星｜10 月 29 日万圣更新',
@@ -465,8 +471,14 @@ async function main() {
       '5v5 战术射击游戏版本信息，站内以 Riot 官方主线补丁说明为主，兼顾中文玩家常关注的地图轮换、Premier 赛段与系统改动。',
     coverImage: '/valorant.jpg',
     officialUrl: 'https://val.qq.com/',
-    currentVersion: '13.09｜V26 第六章',
+    currentVersion: '13.10｜回放书签与特务调整',
     updates: [
+      {
+        version: '13.10｜回放与平衡更新',
+        summary:
+          'Riot 官方于 2026 年 11 月 10 日发布 13.10。回放新增关键时刻书签；Cypher、Killjoy、Vyse 部分技能被摧毁后的冷却缩短至 45 秒，Sage 治疗瞄准更准确；Gauntlet: Glitched 增加组队人数、技能与平衡调整，并包含多项错误修复。补丁也补充说明 13.08 已实施的助攻判定变化。来源：https://playvalorant.com/en-gb/news/game-updates/valorant-patch-notes-13-10/',
+        releaseDate: '2026-11-10T14:00:00Z',
+      },
       {
         version: '13.09｜Hush 登场',
         summary:
@@ -620,13 +632,13 @@ async function main() {
       '超自然都市开放世界 RPG。站内信息以《异环》官方预约页与官方论坛公告为主，优先展示国服测试、公测节点与核心玩法变化。',
     coverImage: '/yihuan.jpg',
     officialUrl: 'https://nte.perfectworld.com/cn/',
-    currentVersion: '1.4 下半｜明音凛及 10 月 29 日活动',
+    currentVersion: '1.5 致电，空想迷数｜11 月 5 日更新',
     updates: [
       {
-        version: '1.5 情报观察｜未官宣',
+        version: '1.5 致电，空想迷数｜11 月 5 日更新',
         summary:
-          '截至 2026 年 10 月 29 日，官网尚未公布 1.5 版本更新公告、卡池顺序、复刻角色或开服日期。网络流传的角色安排与日期没有官方公告佐证，暂不作为确定情报展示。来源：https://nte.perfectworld.com/cn/article/news/gamenews/index.html',
-        releaseDate: '2026-11-11T11:00:00+08:00',
+          '异环国服 1.5「致电，空想迷数」于 2026 年 11 月 5 日维护后上线。上半限定 S 级角色「曳尔沐」及弧盘「静候彩铃」、复刻角色「真红」及弧盘「穿过胭红蜃景」，两组棋盘的 A 级角色均为「薄荷」「埃德嘉」「阿德勒」，官方排期至 11 月 26 日 05:59。TapTap 官方 1.5 版本页同时列出下半新角色 Exe 与复刻卡厄斯，但官网当前更新公告未列下半具体开放时间。版本新增正篇「再会于数海」、异象巡礼「贵腐巢母」，以及「运通全城」等活动和多项系统优化。来源：https://www.taptap.cn/moment/867006927702330532；https://www.taptap.cn/game-event/13483',
+        releaseDate: '2026-11-05T11:00:00+08:00',
       },
       {
         version: '1.4 下半｜10 月 29 日活动',
@@ -715,8 +727,14 @@ async function main() {
       '《反恐精英 2》中文区信息聚合，优先展示 Valve 官方公告、Steam 社区更新与中文社区整理过的重点内容，不加入预测倒计时。',
     coverImage: '/cs2.jpg',
     officialUrl: 'https://www.counter-strike.net/home?l=schinese',
-    currentVersion: '第五赛季｜10 月 29 日更新',
+    currentVersion: '第五赛季｜11 月 4 日更新',
     updates: [
+      {
+        version: '2026-11-04 更新',
+        summary:
+          'Retakes 模式调整：在回合剩余时间足够且没有可阻止拆弹的有效道具时，拆弹将直接完成；并缩短冻结时间与回合重开延迟。地图脚本新增实体预缓存、生成及 Bot 控制接口，并调整多项脚本 API。来源：https://steamcommunity.com/app/730/announcements/',
+        releaseDate: '2026-11-04',
+      },
       {
         version: '2026-10-29 更新',
         summary:
